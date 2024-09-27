@@ -1,50 +1,20 @@
-# React + TypeScript + Vite
+## Dependencies
+ -node
+ -npm
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## To run locally
+  - In console navigate to /currency-converter
+  - run command `npm run dev`
 
-Currently, two official plugins are available:
+## Thoughts
+  This app was quite challenging, having very little exposure to React.
+  I am heppy with how the majority of it has turned out although I know there is much to optimise still and some issues to fix.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+  The particular areas that took the most of my time was:
+  - Originally I attemted to use [text](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml) to bulk get the rates on appstart but ran into CORS issues that would have taken too long to resolve.
+  - I then attempted a wildcard call to [text](https://data-api.ecb.europa.eu/service/data/EXR/D..EUR.SP00.A?firstNObservations=1&format=jsondata) to again get the bulk of the data but it was large and unmanageable.
+  - I then used the same url, passing in only the two currencies I wanted the exchange rates for. This would have worked but there were inconsistencies with which currency value was returned first and as they had no name property it became unmanageable.
 
-## Expanding the ESLint configuration
+  - Sharing data between react components took a bit of figuring out but I think I understand it much better now.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+  Overall I really enjoyed this but would have liked to have done a bit better.
