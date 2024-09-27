@@ -1,24 +1,29 @@
 import { useState } from "react";
 import Currencies from "./Currencies";
-import getRate from "./GetCurrencyConversionRate";
-import numberCheck from "./DecimalValidationHelper";
+import GetRate from "./GetCurrencyConversionRate";
+import NumberCheck from "./DecimalValidationHelper";
 
 const Preview = (props: any) => {
   const data = props.data;
   return (
     <div className="row">
-      <div className="col blockquote">
+      <div className="col-10 col-md-6">
         {data.fromRate != 0 &&
-          <p>1 EUR = {data.fromRate} {data.fromCurrency}</p>
+          <p className="info-label">1 EUR = {data.fromRate} {data.fromCurrency}</p>
         }
-        {data.date != "" &&
-          <p>Updated {data.date}</p>
+
+      </div>
+      <div className="col-10 col-md-6">
+        {data.toRate != 0 &&
+          <p className="info-label">1 EUR = {data.toRate} {data.toCurrency}</p>
         }
       </div>
-      <div className="col blockquote">
-        {data.toRate != 0 &&
-          <p>1 EUR = {data.toRate} {data.toCurrency}</p>
-        }
+      <div className="row">
+        <div className="col">
+          {data.date != "" &&
+            <p className="date-badge">Updated {data.date}</p>
+          }
+        </div>
       </div>
     </div>
   )
@@ -44,31 +49,35 @@ function App() {
     const name = evt.target.name;
     const value = evt.target.value;
 
+    var currentInputValue = 0;
+    var otherInput = "";
+    var conversion = 0;
+    var rate = 0;
+    var conversion = 0;
+
+    if(state.date != "" && state.fromCurrency != "" && state.toCurrency != "") {
+
+      if(name == "fromAmount" || name == "fromCurrency") {
+        rate = Number(state.fromRate) / Number(state.toRate);
+        otherInput = "toAmount";
+        currentInputValue = state.fromAmount; 
+      } 
+      else {
+        rate = Number(state.toRate) / Number(state.fromRate);
+        otherInput = "fromAmount";
+        currentInputValue = state.toAmount;
+      }
+      conversion = Math.round(((Number(currentInputValue) / rate) + Number.EPSILON) * 100) / 100
+    }
+
     if (name == "fromAmount" || name == "toAmount") {
         
-      console.log(state.toAmount);
-
-      if(state.date != "" && state.fromCurrency != "" && state.toCurrency != "") {
-        var otherInput = "";
-        var rate = 0;
-        if(name == "fromAmount") {
-          rate = Number(state.fromRate) / Number(state.toRate);
-          otherInput = "toAmount";
-
-        } else {
-          rate = Number(state.toRate) / Number(state.fromRate);
-          otherInput = "fromAmount"
-        }
-
-        var conversion = Math.round(((Number(value) / rate) + Number.EPSILON) * 100) / 100
-
-        setState({
-          ...state,
-          [name]: value,
-          [otherInput]: conversion
-        })
+          setState({
+            ...state,
+            [name]: value,
+            [otherInput]: conversion
+          })
       }
-    }
     else {
       let rateSelector = "";
       let fetchDate = "date"; 
@@ -82,12 +91,13 @@ function App() {
           break;
       }
 
-      getRate(value).then(result => {
+      GetRate(value).then(result => {
         setState({
           ...state,
           [name]: value,
           [rateSelector]: result[0],
-          [fetchDate]: result[1]
+          [fetchDate]: result[1],
+          [otherInput]: conversion
         })
       });
     }
@@ -97,41 +107,39 @@ function App() {
   return <div className='container'>
     <form>
       <h1 className='display-5'><u>Currency converter</u></h1>
-      <div className='row'>
-
-        <div className='col'>
-          <div className='card'>
+      <div className='row justify-content-evenly'>
+        <div className='col-12 col-md-6'>
+          <div className='card mt-3'>
             <div className='card-body'>
               <p className='text-secondary'>From:</p>
-              <select name='fromCurrency' className="form-select" onChange={handleChange}>
-                {Object.keys(Currencies).length === 0 ? <option>No items found</option> : null}
+              <select name='fromCurrency' className="form-select mb-3" onChange={handleChange}>
+                {Object.keys(Currencies).length === 0 ? <option>No items found</option> : <option value={"default"} >Please select</option>}
                 {Object.keys(Currencies).map(key =>
                   <option value={key} key={key}>{Currencies[key]} ({key})</option>
                 )}
               </select>
-              <input value={state.fromAmount} name='fromAmount' onChange={handleChange} type='input' className='form-control'  onKeyDown={numberCheck}></input>
+              <input value={state.fromAmount} name='fromAmount' onChange={handleChange} type='input' className='form-control form-control-lg txt-input'  onKeyDown={NumberCheck}></input>
             </div>
           </div>
         </div>
 
-        <div className='col'>
-          <div className='card'>
+        <div className='col-12 col-md-6'>
+          <div className='card mt-3'>
             <div className='card-body'>
               <p className='text-secondary'>To:</p>
-              <select name='toCurrency' className="form-select" onChange={handleChange}>
-                {Object.keys(Currencies).length === 0 ? <option>No items found</option> : null}
+              <select name='toCurrency' className="form-select mb-3" onChange={handleChange}>
+                {Object.keys(Currencies).length === 0 ? <option>No items found</option> : <option value={"default"}>Please select</option>}
                 {Object.keys(Currencies).map(key =>
                   <option value={key} key={key}>{Currencies[key]} ({key})</option>
                 )}
               </select>
-              <input value={state.toAmount} name='toAmount' onChange={handleChange} type='input' className='form-control' placeholder='0.00' onKeyDown={numberCheck}></input>
+              <input value={state.toAmount} name='toAmount' onChange={handleChange} type='input' className='form-control form-control-lg txt-input' placeholder='0.00' onKeyDown={NumberCheck}></input>
             </div>
           </div>
         </div>
 
       </div>
     </form>
-
     <Preview data={state} />
   </div>
 }

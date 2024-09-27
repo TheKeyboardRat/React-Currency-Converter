@@ -1,4 +1,5 @@
-async function getRate(currency:string) {
+async function GetRate(currency:string) {
+  if(currency == "default") return [0, 0]
     const response = await fetch(`https://data-api.ecb.europa.eu/service/data/EXR/D.${currency}.EUR.SP00.A?lastNObservations=1&format=jsondata`, {method: "GET", redirect: "follow"})
      .then((response) => response.json())
      .catch((error) => console.error(error));
@@ -10,4 +11,4 @@ async function getRate(currency:string) {
      return [value, date];
    }
 
-   export default getRate;
+   export default GetRate;

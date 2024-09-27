@@ -1,4 +1,4 @@
-function numberCheck(evt: any) {
+function NumberCheck(evt: any) {
     var charCode = (evt.which) ? evt.which : evt.keyCode;
     var text = evt.currentTarget.value.toString();
 
@@ -24,4 +24,4 @@ function CanAddDecimal(value: any) {
     return true;
 }
 
-export default numberCheck;
+export default NumberCheck;
