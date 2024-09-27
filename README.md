@@ -1,6 +1,6 @@
 ## Dependencies
- -node
- -npm
+ - node
+ - npm
 
 ## To run locally
   - In console navigate to /currency-converter
