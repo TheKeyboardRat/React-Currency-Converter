@@ -30,10 +30,17 @@ input:focus, select:focus{
     padding: 15px;
     border: 1px solid #8497ad;
     color: #184886;
-    border-radius: 10px;
+    border-radius: 5px;
+    width: 12rem;
+    text-align: center;
 }
 
 .info-label {
     color:#717880;
     font-size: 1.5rem;
+}
+
+button {
+    width: 12rem;
+    height: 3rem;
 }
